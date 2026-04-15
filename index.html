@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>forge.ui — AI Website Builder</title>
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet" />
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <div class="logo-mark">⚡</div>
+        <span class="logo-name">forge<em>.ui</em></span>
+      </div>
+    </div>
+
+    <div class="header-center"></div>
+
+    <div class="header-right">
+      <button class="hdr-btn" id="settings-btn">⚙ Settings</button>
+      <button class="hdr-btn" id="download-btn" title="Download ZIP">↓ ZIP</button>
+      <div class="live-badge" id="live-badge">● READY</div>
+    </div>
+  </header>
+
+
+  <div class="settings-panel" id="settings-panel" aria-hidden="true">
+    <div class="settings-inner">
+      <div class="settings-title">Settings</div>
+
+      <label class="field-label">Generation Mode</label>
+      <div class="mode-group" id="mode-group">
+        <button class="mode-btn active" data-mode="multifile">
+          <span class="mode-icon">🗂</span>
+          <span class="mode-name">Multi-File</span>
+          <span class="mode-desc">HTML + CSS + JS</span>
+        </button>
+        <button class="mode-btn" data-mode="singlefile">
+          <span class="mode-icon">📄</span>
+          <span class="mode-name">Single File</span>
+          <span class="mode-desc">Self-contained HTML</span>
+        </button>
+        <button class="mode-btn" data-mode="component">
+          <span class="mode-icon">🧩</span>
+          <span class="mode-name">Component</span>
+          <span class="mode-desc">UI snippet</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="workspace">
+
+
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="sidebar-label">Files</span>
+          <button class="icon-btn" id="new-file-btn" title="New file">+</button>
+        </div>
+        <div class="file-tree" id="file-tree">
+          <div class="tree-empty">No files yet</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section sidebar-chat-section">
+        <div class="sidebar-header">
+          <span class="sidebar-label">History</span>
+          <button class="icon-btn" id="clear-chat-btn" title="Clear history">✕</button>
+        </div>
+        <div class="chat-history" id="chat-history">
+          <div class="chat-empty">No history yet</div>
+        </div>
+      </div>
+    </aside>
+
+
+    <div class="editor-panel">
+      <div class="file-tabs" id="file-tabs">
+        <span class="no-tabs-hint">No files open</span>
+      </div>
+      <div class="editor-body" id="editor-body">
+
+        <div class="editor-placeholder" id="editor-placeholder">
+          <div class="ph-icon">✦</div>
+          <div class="ph-title">Ready to Build</div>
+          <div class="ph-sub">Describe your website and hit Generate</div>
+          <div class="ph-chips" id="prompt-chips"></div>
+        </div>
+
+        <textarea id="cm-textarea"></textarea>
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <div class="preview-bar">
+        <span class="panel-label">Preview</span>
+        <div class="vp-group">
+          <button class="vp-btn active" data-width="100%" title="Desktop">🖥</button>
+          <button class="vp-btn" data-width="768px" title="Tablet">📱</button>
+          <button class="vp-btn" data-width="390px" title="Mobile">📲</button>
+        </div>
+        <div class="preview-btns">
+          <button class="icon-btn" id="refresh-btn" title="Refresh">↺</button>
+          <button class="icon-btn" id="open-tab-btn" title="Open in new tab">↗</button>
+          <button class="icon-btn" id="copy-code-btn" title="Copy code">⎘</button>
+        </div>
+      </div>
+      <div class="preview-viewport" id="preview-viewport">
+        <iframe id="preview-frame" sandbox="allow-scripts allow-modals allow-forms allow-same-origin"
+          title="Preview"></iframe>
+        <div class="preview-loading" id="preview-loading">
+          <div class="spin-ring"></div>
+          <span>Rendering…</span>
+        </div>
+        <div class="preview-welcome" id="preview-welcome">
+          <div class="pw-icon">🌐</div>
+          <div class="pw-text">Your website will appear here</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="prompt-bar">
+    <div class="mode-pill" id="mode-pill">multi-file</div>
+    <div class="prompt-box">
+      <textarea id="prompt-input" rows="1"
+        placeholder="Describe your website… e.g. 'A photographer portfolio with dark theme, masonry gallery, smooth scroll and contact form'"></textarea>
+    </div>
+    <button class="generate-btn" id="generate-btn">
+      <span class="gen-icon">⚡</span>
+      <span class="gen-label">Generate</span>
+    </button>
+  </div>
+
+
+  <div class="status-bar">
+    <div class="status-dot" id="status-dot"></div>
+    <span id="status-text">Ready - enter a prompt to build your website</span>
+    <div class="status-spacer"></div>
+    <span class="status-model" id="status-model"></span>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ══════════════════════ SCRIPTS ══════════════════════ -->
+  <!-- CodeMirror core -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <!-- CodeMirror modes -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+  <!-- CodeMirror addons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/comment/comment.min.js"></script>
+  <!-- JSZip for download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- App modules (order matters) -->
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="editor.js"></script>
+  <script src="preview.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

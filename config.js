@@ -15,7 +15,7 @@ const STORAGE = {
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 /* ── API Key (hardcoded — paste your key here) ── */
-const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_KEY = 'place your api key ';
 
 /* ── Available models ── */
 // Add or remove models here. id must match OpenRouter's model string.
